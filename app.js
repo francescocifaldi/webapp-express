@@ -3,6 +3,7 @@ const app = express()
 const port = process.env.PORT || 3000
 const notFound = require('./middlewares/notFound')
 const cors = require('cors')
+const movieRouter = require('./routers/movieRouter')
 
 app.use(
 	cors({
@@ -14,6 +15,8 @@ app.use(express.static('public'))
 app.get('/',(req,res) =>{
     res.send('OK')
 })
+
+app.use('/api/movies', movieRouter)
 
 app.use(notFound)
 
