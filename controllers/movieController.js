@@ -1,16 +1,19 @@
 const connection = require('../data/db')
 
 function index(req, res) {
-    const sql = "SELECT * FROM movies"
+	const resPerPage = 2
+	const currentPage = 0+1
+	const offset = currentPage*resPerPage
+    const sql = `SELECT * FROM movies LIMIT ${resPerPage} OFFSET ${offset}`
     connection.query(sql, (err, movies) => {
         if (err) return res.status(500).json({ message: err.message })
         
-        const countSql = "SELECT COUNT(*) AS total FROM movies"
+        const countSql = `SELECT COUNT(*) AS totalResults FROM movies`
         connection.query(countSql, (_, result) => {
             if (err) return res.status(500).json({ message: err.message })
-            const total = result[0].total;
-			
-            res.json({ movies, total })
+            const totalResults = result[0].totalResults;
+			const totalPages =  Math.ceil(totalResults / resPerPage);
+            res.json({ movies, totalResults, totalPages })
         })
     })
 }
