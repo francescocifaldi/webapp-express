@@ -1,9 +1,9 @@
 const connection = require('../data/db')
 
 function index(req, res) {
-	const resPerPage = 2
-	const currentPage = 0+1
-	const offset = currentPage*resPerPage
+	const resPerPage = parseInt(req.query.resPerPage)
+	const currentPage = parseInt(req.query.currentPage)
+	const offset = (currentPage-1)*resPerPage
     const sql = `SELECT * FROM movies LIMIT ${resPerPage} OFFSET ${offset}`
     connection.query(sql, (err, movies) => {
         if (err) return res.status(500).json({ message: err.message })
