@@ -3,10 +3,18 @@ const connection = require('../data/db')
 function index(req, res) {
     const sql = "SELECT * FROM movies"
     connection.query(sql, (err, movies) => {
-        if(err) return res.status(500).json({message: err.message})
-        res.json(movies)
+        if (err) return res.status(500).json({ message: err.message })
+        
+        const countSql = "SELECT COUNT(*) AS total FROM movies"
+        connection.query(countSql, (_, result) => {
+            if (err) return res.status(500).json({ message: err.message })
+            const total = result[0].total;
+			
+            res.json({ movies, total })
+        })
     })
 }
+
 
 function show(req, res) {
     const id = req.params.id
